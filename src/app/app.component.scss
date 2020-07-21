@@ -1,0 +1,29 @@
+.wrapper {
+  border: 2px solid;
+  width: fit-content;
+}
+
+.box {
+  width: 100px;
+  height: 100px;
+  margin: 2px;
+}
+
+@keyframes blink {
+  50% {
+    opacity: 0;
+  }
+}
+@-webkit-keyframes blink {
+  50% {
+    opacity: 0;
+  }
+}
+.blink {
+  animation: blink 1s step-start 0s infinite;
+  -webkit-animation: blink 0.5s step-start 0s infinite;
+}
+
+.hidden {
+  visibility: hidden;
+}
