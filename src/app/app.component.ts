@@ -7,16 +7,14 @@ import { ActivatedRoute } from '@angular/router';
   styleUrls: ['./app.component.scss'],
 })
 export class AppComponent implements OnInit, OnDestroy {
+  private positions: Array<{ row: number; col: number }>;
+  private rowColors: string[];
+  private timer: any;
+  private timeoutDuration = 1000; // Used for timer, in milliseconds
+
   public nbCols: number;
   public nbRows: number;
   public matrix: Array<Array<string>>;
-
-  private rowColors: string[];
-  private timer: any;
-  /**
-   * Used for timer, in milliseconds
-   */
-  private timeoutDuration = 1000;
 
   constructor(private route: ActivatedRoute) {}
 
@@ -57,9 +55,26 @@ export class AppComponent implements OnInit, OnDestroy {
     this.rowColors = [];
     this.matrix = new Array(this.nbRows);
 
-    this.setMatrix(null);
+    this.setMatrixBoxes(null);
+
+    this.initPositions();
 
     this.handleBox();
+  }
+
+  /**
+   * Set list of available box positions of the matrix
+   */
+  private initPositions() {
+    this.positions = [];
+    for (let r = 0; r < this.nbRows; r++) {
+      for (let c = 0; c < this.nbCols; c++) {
+        this.positions.push({
+          row: r,
+          col: c,
+        });
+      }
+    }
   }
 
   /**
@@ -67,15 +82,14 @@ export class AppComponent implements OnInit, OnDestroy {
    */
   private handleBox() {
     this.timer = setTimeout(() => {
-      const row = this.getRandomInteger(this.nbRows);
-      const col = this.getRandomInteger(this.nbCols);
-      this.matrix[row][col] = 'blink';
+      const randIndex = this.getRandomInteger(this.positions.length);
+      const [position] = this.positions.slice(randIndex, randIndex + 1);
+      this.positions.splice(randIndex, 1);
+      this.matrix[position.row][position.col] = 'blink';
 
-      const hasAllDisplayedBox = this.matrix.every((r) => r.every((c) => c));
-
-      if (hasAllDisplayedBox) {
+      if (!this.positions.length) {
         this.destroyTimer();
-        this.setMatrix('visible');
+        this.setMatrixBoxes('visible');
       } else {
         this.handleBox();
       }
@@ -87,7 +101,7 @@ export class AppComponent implements OnInit, OnDestroy {
    *
    * @param {string} value - class
    */
-  private setMatrix(value: string) {
+  private setMatrixBoxes(value: string) {
     for (let row = 0; row < this.nbRows; row++) {
       this.matrix[row] = new Array(this.nbCols).fill(value);
     }

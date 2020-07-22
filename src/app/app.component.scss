@@ -20,8 +20,8 @@
   }
 }
 .blink {
-  animation: blink 1s step-start 0s infinite;
-  -webkit-animation: blink 0.5s step-start 0s infinite;
+  animation: blink 0.25s step-start 0s infinite;
+  -webkit-animation: blink 0.25s step-start 0s infinite;
 }
 
 .hidden {
